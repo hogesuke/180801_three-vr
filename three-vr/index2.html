@@ -1,0 +1,67 @@
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="js/three_r79.js"></script>
+  <!--　WebVRの判定、遷移ボタンのスクリプト　-->
+  <script src="js/WebVR.js"></script>
+  <!--　WebVRのポリフィル　-->
+  <script src="js/webvr-polyfill.js"></script>
+  <script src="js/DeviceOrientationControls.js"></script>
+  <script src="js/OrbitControls.js"></script>
+</head>
+<body>
+  <script>
+      // ページの読み込みを待つ
+      // window.addEventListener('DOMContentLoaded', init);
+
+      // function init() {
+
+        // シーンの作成
+        var scene = new THREE.Scene();
+        // カメラの作成
+        var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        // レンダラーの作成（アンチエイリアス有効）
+        var renderer = new THREE.WebGLRenderer( {antialias: true} );
+        // レンダラーが描画するキャンバスサイズの設定
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        // キャンバスをDOMツリーに追加
+        document.body.appendChild( renderer.domElement );
+
+        // 環境光の作成
+        var light = new THREE.AmbientLight( 0xffffff );
+        // 環境光をシーンへ追加
+        scene.add( light );
+
+        // DeviceOrientationControlsインスタンス作成
+        var controls = new THREE.DeviceOrientationControls( camera );
+
+        // 球体の作成
+        var geometry = new THREE.SphereGeometry( 5, 32, 16 );
+        // テクスチャを球体の裏側にマップする
+        geometry.scale( - 1, 1, 1 );
+
+        // テクスチャ画像の読み込み
+        var texture = new THREE.TextureLoader().load( './imgs/sunflower_er.jpg' );
+        // マテリアルの作成
+        var material = new THREE.MeshPhongMaterial( { map: texture, color: 0xffffff } );
+
+        // オブジェクトの作成
+        var mesh = new THREE.Mesh( geometry, material );
+        // オブジェクトをy軸に沿って回転
+        mesh.rotation.y = Math.PI/2;
+        // オブジェクトをシーンに追加
+        scene.add( mesh );
+
+        function render(){
+        	requestAnimationFrame( render );
+
+        	// レンダリング
+        	renderer.render(scene,camera);
+
+        	controls.update();
+        }
+        render();
+      // }
+  </script>
+</body>
+</html>
